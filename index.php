@@ -2,7 +2,7 @@
 
 include 'vars.php';
 
-$files = array();
+$collection = array();
 
 
 if (isset($_REQUEST['subdir'])) {
@@ -21,14 +21,15 @@ if ($handle = opendir($newdir)) {
         if (is_dir("$newdir/$entry")) {
             //Directory
             if ($entry != "." && $entry != "..") {
-                echo("<a href='index.php?subdir=$entry'>$entry</a><br>\n");
+                $collection[] = "<a href='index.php?subdir=$entry'>$entry</a><br>\n";
             }
         } else {
             //File
-            $path_parts = pathinfo("$newdir/$entry");
-            $extension=$path_parts['extension'];
+            $extension = pathinfo("$newdir/$entry", PATHINFO_EXTENSION);
             if ($extension == "mp4" || $extension == "MP4") {
-                echo("<a href='player.php?file=$newdir/$entry'>$entry</a><br>\n");
+                $collection[] = "<a href='player.php?file=$newdir/$entry&ext=mp4'>$entry</a><br>\n";
+            } elseif ($extension == "webm" || $extension == "WEBM") {
+                $collection[] = "<a href='player.php?file=$newdir/$entry&ext=webm'>$entry</a><br>\n";
             }
         }
     }
@@ -36,12 +37,10 @@ if ($handle = opendir($newdir)) {
 
 
 
-    natsort($files); // sort.
+    //natsort($collection); // sort.
     // print.
-    foreach($files as $file) {
-        if (! is_dir($file)) {
-            echo("<a href='player.php?file=$file'>$file</a> <br />\n");
-        }
+    foreach($collection as $item) {
+            echo("$item");
     }
 }
 ?>
