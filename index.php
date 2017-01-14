@@ -1,28 +1,47 @@
 <?php
+
+include 'vars.php';
+
 $files = array();
-$dir = opendir('/var/www/html/video'); // open the cwd..also do an err check.
-while(false != ($file = readdir($dir))) {
 
-#index.php  player.php  stream.php  VideoStream.php
 
-        if(($file != ".") and ($file != "..") and ($file != "index.php") and ($file != "player.php") and ($file != "stream.php") and ($file != "VideoStream.php")) {
-                $files[] = $file; // put in array.
-        }   
+if (isset($_REQUEST['subdir'])) {
+    $newdir = "$directory" . "/" . $_REQUEST['subdir'];
+} else {
+    $newdir = $directory;
 }
 
-natsort($files); // sort.
 
-// print.
-foreach($files as $file) {
+if ($handle = opendir($newdir)) {
 
-//echo "$file <br>";
-//echo "<video width=\"400\" controls>";
-//echo "<source src=\"$file\" type=\"video/mp4\">";
-//echo "</video><br><br>";
+    echo("<a href='index.php'>Home</a><br><br><br>\n");
+
+    /* This is the correct way to loop over the directory. */
+    while (false !== ($entry = readdir($handle))) {
+        if (is_dir("$newdir/$entry")) {
+            //Directory
+            if ($entry != "." && $entry != "..") {
+                echo("<a href='index.php?subdir=$entry'>$entry</a><br>\n");
+            }
+        } else {
+            //File
+            $path_parts = pathinfo("$newdir/$entry");
+            $extension=$path_parts['extension'];
+            if ($extension == "mp4" || $extension == "MP4") {
+                echo("<a href='player.php?file=$newdir/$entry'>$entry</a><br>\n");
+            }
+        }
+    }
+    closedir($handle);
 
 
-if (! is_dir($file)) {
-    echo("<a href='player.php?file=$file'>$file</a> <br />\n");
-}
+
+    natsort($files); // sort.
+    // print.
+    foreach($files as $file) {
+        if (! is_dir($file)) {
+            echo("<a href='player.php?file=$file'>$file</a> <br />\n");
+        }
+    }
 }
 ?>
