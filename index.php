@@ -26,10 +26,11 @@ if ($handle = opendir($newdir)) {
         } else {
             //File
             $extension = pathinfo("$newdir/$entry", PATHINFO_EXTENSION);
+            $filename = pathinfo("$newdir/$entry", PATHINFO_FILENAME);
             if ($extension == "mp4" || $extension == "MP4") {
-                $collection[] = "<a href='player.php?file=$newdir/$entry&ext=mp4'>$entry</a><br>\n";
+                $collection[] = "<a href='player.php?file=$newdir/$entry&ext=mp4'><img src=\"image.php?image=$newdir/$filename.jpg\" alt=\"$filename\" style=\"width:128px;height:128px;\" title=\"$entry\"></a>\n";
             } elseif ($extension == "webm" || $extension == "WEBM") {
-                $collection[] = "<a href='player.php?file=$newdir/$entry&ext=webm'>$entry</a><br>\n";
+                $collection[] = "<a href='player.php?file=$newdir/$entry&ext=webm'><img src=\"image.php?image=$newdir/$filename.jpg\" alt=\"$filename\" style=\"width:128px;height:128px;\" title=\"$entry\"></a>\n";
             }
         }
     }
@@ -37,7 +38,8 @@ if ($handle = opendir($newdir)) {
 
 
 
-    //natsort($collection); // sort.
+    natsort($collection); // sort.
+    $collection = array_reverse($collection, true);
     // print.
     foreach($collection as $item) {
             echo("$item");
