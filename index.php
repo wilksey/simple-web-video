@@ -11,48 +11,42 @@ if (isset($_REQUEST['subdir'])) {
     $newdir = "$directory" . "/" . $_REQUEST['subdir'];
 } else {
     $newdir = $directory;
-    
-    // Here we list videos uploaded today from all directories inside of $directory.
-    $path = realpath($directory);
-     
-    $year = date("Y");
-    $month = date("n");
-    $day = date("j");    
-    $today = date("Ymd");
-    $yesterday  = date("Ymd", mktime(1, 1, 1, $month, $day-1, $year));
-    
+}
 
-    $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
-    foreach($objects as $name => $object) {
-        //File
-        $theFilename = pathinfo("$name", PATHINFO_FILENAME);
-        $theDirectory = pathinfo("$name", PATHINFO_DIRNAME);
-        $theExtension = pathinfo("$name", PATHINFO_EXTENSION);
-        //If the filename contains today's date, show it on the home page.
-        if (strpos($theFilename, $today) !== false) {
-            //echo "$theDirectory/$theFilename.$theExtension<br>\n";
-
-
-            if ($theExtension == "mp4" || $theExtension == "MP4") {
-                $todaysVideos[] = "<a href='player.php?file=$theDirectory/$theFilename.$theExtension&ext=mp4'><img src=\"image.php?image=$theDirectory/$theFilename.jpg\" alt=\"$theFilename\" style=\"width:128px;height:128px;\" title=\"$theFilename\"></a>\n";
-            } elseif ($theExtension == "webm" || $theExtension == "WEBM") {
-                $todaysVideos[] = "<a href='player.php?file=$theDirectory/$theFilename.$theExtension&ext=webm'><img src=\"image.php?image=$theDirectory/$theFilename.jpg\" alt=\"$theFilename\" style=\"width:128px;height:128px;\" title=\"$theFilename\"></a>\n";
-            }
-
-
-        } elseif (strpos($theFilename, $yesterday) !== false) {
-
+// Here we list videos uploaded today from all directories inside of $directory.
+$path = realpath($newdir);
+$year = date("Y");
+$month = date("n");
+$day = date("j");
+$today = date("Ymd");
+$yesterday  = date("Ymd", mktime(1, 1, 1, $month, $day-1, $year));
+$objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
+foreach($objects as $name => $object) {
+    //File
+    $theFilename = pathinfo("$name", PATHINFO_FILENAME);
+    $theDirectory = pathinfo("$name", PATHINFO_DIRNAME);
+    $theExtension = pathinfo("$name", PATHINFO_EXTENSION);
+    //If the filename contains today's date, show it on the home page.
+    if (strpos($theFilename, $today) !== false) {
+        //echo "$theDirectory/$theFilename.$theExtension<br>\n";
         if ($theExtension == "mp4" || $theExtension == "MP4") {
-                $yesterdaysVideos[] = "<a href='player.php?file=$theDirectory/$theFilename.$theExtension&ext=mp4'><img src=\"image.php?image=$theDirectory/$theFilename.jpg\" alt=\"$theFilename\" style=\"width:128px;height:128px;\" title=\"$theFilename\"></a>\n";
-            } elseif ($theExtension == "webm" || $theExtension == "WEBM") {
-                $yesterdaysVideos[] = "<a href='player.php?file=$theDirectory/$theFilename.$theExtension&ext=webm'><img src=\"image.php?image=$theDirectory/$theFilename.jpg\" alt=\"$theFilename\" style=\"width:128px;height:128px;\" title=\"$theFilename\"></a>\n";
-            }
+            $todaysVideos[] = "<a href='player.php?file=$theDirectory/$theFilename.$theExtension&ext=mp4'><img src=\"image.php?image=$theDirectory/$theFilename.jpg\" alt=\"$theFilename\" style=\"width:128px;height:128px;\" title=\"$theFilename\"></a>\n";
+        } elseif ($theExtension == "webm" || $theExtension == "WEBM") {
+            $todaysVideos[] = "<a href='player.php?file=$theDirectory/$theFilename.$theExtension&ext=webm'><img src=\"image.php?image=$theDirectory/$theFilename.jpg\" alt=\"$theFilename\" style=\"width:128px;height:128px;\" title=\"$theFilename\"></a>\n";
+        }
+    } elseif (strpos($theFilename, $yesterday) !== false) {
 
-
-
+    if ($theExtension == "mp4" || $theExtension == "MP4") {
+            $yesterdaysVideos[] = "<a href='player.php?file=$theDirectory/$theFilename.$theExtension&ext=mp4'><img src=\"image.php?image=$theDirectory/$theFilename.jpg\" alt=\"$theFilename\" style=\"width:128px;height:128px;\" title=\"$theFilename\"></a>\n";
+        } elseif ($theExtension == "webm" || $theExtension == "WEBM") {
+            $yesterdaysVideos[] = "<a href='player.php?file=$theDirectory/$theFilename.$theExtension&ext=webm'><img src=\"image.php?image=$theDirectory/$theFilename.jpg\" alt=\"$theFilename\" style=\"width:128px;height:128px;\" title=\"$theFilename\"></a>\n";
         }
     }
 }
+
+
+
+
 
 
 if ($handle = opendir($newdir)) {
