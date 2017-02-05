@@ -19,6 +19,7 @@ $year = date("Y");
 $month = date("n");
 $day = date("j");
 $today = date("Ymd");
+echo "<br>$today<br>\n";
 $yesterday  = date("Ymd", mktime(1, 1, 1, $month, $day-1, $year));
 $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
 foreach($objects as $name => $object) {
